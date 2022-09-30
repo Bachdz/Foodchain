@@ -3,14 +3,15 @@ const EC = require('elliptic').ec;
 const ec = new EC('secp256k1');
 
 class Data {
-    constructor(fromAddress, toAddress, amount) {
+    constructor(fromAddress, toAddress, currentState) {
         this.fromAddress = fromAddress;
         this.toAddress = toAddress;
-        this.amount = amount;
+        this.currentState = currentState;
+        this.timestamp = Date.now();
     }
 
     calculateHash() {
-        return SHA256(this.fromAddress + this.toAddress + this.amount).toString();
+        return SHA256(this.fromAddress + this.toAddress + this.currentState + this.timestamp).toString();
     }
 
     signData(signingKey) {
@@ -19,6 +20,7 @@ class Data {
         }
         const hashTx = this.calculateHash()
         const sig = signingKey.sign(hashTx, 'base64')
+
         this.signature = sig.toDER('hex')
     }
 
@@ -30,6 +32,8 @@ class Data {
         const publicKey = ec.keyFromPublic(this.fromAddress, 'hex');
         return publicKey.verify(this.calculateHash(), this.signature);
     }
+
+
 }
 
 
@@ -42,7 +46,7 @@ class Block {
     }
 
     calculateHash() {
-        return SHA256(this.index + this.previousHash + this.timestamp + JSON.stringify(this.data)).toString();
+        return SHA256(this.previousHash + this.timestamp + JSON.stringify(this.data)).toString();
     }
 
     hasValidData() {
@@ -55,7 +59,8 @@ class Block {
 
 
 class Blockchain {
-    constructor() {
+    constructor(serialNumber) {
+        this.serialNumber = serialNumber;
         this.chain = [this.creatGenesisBlock()];
     }
 

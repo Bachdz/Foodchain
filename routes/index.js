@@ -3,8 +3,15 @@ const router = express.Router();
 
 
 router.get('/', (req, res) => {
-    res.render("home", {"user": "test"});
+    // console.log(foodChain);
+
+    // if(foodChain.isValid()) {
+        res.render("home");
+    // } else {
+    //     res.send("couldn't initialize Foodchain!")
+    // }
 });
 
 
 module.exports = router;
+

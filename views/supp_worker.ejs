@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Supplier Worker</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/css/supplier.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="nav-bar">
+    <h3>Supplier Worker</h3>
+    <a href="/">
+        <button type="button" class="btn btn-danger">Log out</button>
+    </a>
+</div>
+<a href="/supplier/new_product">
+    <button type="button" class="btn btn-success">Create new product</button>
+</a>
+<table class="table table-striped" style="width: 90%; text-align: center">
+    <thead>
+    <tr style="text-align: center">
+        <th scope="col">Serial Number</th>
+        <th scope="col">Current state</th>
+        <th scope="col">Manufactured</th>
+        <th scope="col">Inspected</th>
+        <th scope="col">Shipped</th>
+        <th scope="col">Stocked</th>
+        <th scope="col">Labeled</th>
+        <th scope="col">Sold</th>
+    </tr>
+    </thead>
+    <tbody>
+    <%
+    function checkState(blockchain, state) {
+        for(const block of blockchain) {
+            if(block.data !== "Genesis Block") {
+                if (block.data.currentState === state) {
+                    return countTime(Date.now(), block.data.timestamp)
+                }
+            }
+        }
+    }
+    %>
+    <% for (const elem of productStorage ){ %>
+        <tr>
+            <th scope="row"><%= elem.serialNumber %></th>
+
+            <%let data = elem.chain[elem.chain.length - 1].data %>
+            <td><%= data.currentState %></td>
+            <td>
+                <%= checkState(elem.chain, "Manufactured")%>
+            </td>
+            <td>
+                <%= checkState(elem.chain, "Inspected")%>
+            </td>
+            <td>
+                <%= checkState(elem.chain, "Shipped")%>
+            </td>
+            <td>
+                <%= checkState(elem.chain, "Stocked")%>
+            </td>
+            <td>
+                <%= checkState(elem.chain, "Labeled")%>
+            </td>
+            <td>
+                <%= checkState(elem.chain, "Sold")%>
+            </td>
+            <td>
+                <%if (data.currentState == "Inspected" ) {%>
+                <a href="/supplier/ship?serialNumber=<%=elem.serialNumber%>">
+                    <button type="button" class="btn btn-primary">Ship</button>
+                </a>
+                <%}%>
+            </td>
+        </tr>
+    <% } %>
+    </tbody>
+</table>
+</body>
+</html>

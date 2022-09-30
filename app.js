@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 
 const app = express();
 const port = process.env.PORT || 8000;
+require('dotenv').config();
 
 const homeRouter = require('./routes/index')
 const retailerRouter  = require('./routes/retailer');
