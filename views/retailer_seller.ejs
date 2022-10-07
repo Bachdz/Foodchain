@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Supplier Inspector</title>
+    <title>Retailer Seller</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="/css/supplier_retailer.css">
@@ -14,12 +14,11 @@
 </head>
 <body>
 <div class="nav-bar">
-    <h3>Supplier Inspector</h3>
+    <h3>Retailer Seller</h3>
     <a href="/">
         <button type="button" class="btn btn-danger">Log out</button>
     </a>
 </div>
-
 <table class="table table-striped" style="width: 90%; text-align: center">
     <thead>
     <tr style="text-align: center">
@@ -34,11 +33,10 @@
     </tr>
     </thead>
     <tbody>
-
     <%
     function checkState(blockchain, state) {
-        for (const block of blockchain) {
-            if (block.data !== "Genesis Block") {
+        for(const block of blockchain) {
+            if(block.data !== "Genesis Block") {
                 if (block.data.currentState === state) {
                     return countTime(Date.now(), block.data.timestamp)
                 }
@@ -50,7 +48,7 @@
         <tr>
             <th scope="row"><%= elem.serialNumber %></th>
 
-            <% let data = elem.chain[elem.chain.length - 1].data %>
+            <%let data = elem.chain[elem.chain.length - 1].data %>
             <td><%= data.currentState %></td>
             <td>
                 <%= checkState(elem.chain, "Manufactured")%>
@@ -71,11 +69,11 @@
                 <%= checkState(elem.chain, "Sold")%>
             </td>
             <td>
-                <% if (data.currentState == "Manufactured" ) { %>
-                <a href="/supplier/inspect?serialNumber=<%= elem.serialNumber %>">
-                    <button type="button" class="btn btn-primary">Inspect</button>
+                <%if (data.currentState == "Labeled" ) {%>
+                <a href="/retailer/sell?serialNumber=<%=elem.serialNumber%>">
+                    <button type="button" class="btn btn-primary">Sell</button>
                 </a>
-                <% } %>
+                <%}%>
             </td>
         </tr>
     <% } %>

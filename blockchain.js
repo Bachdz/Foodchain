@@ -32,8 +32,6 @@ class Data {
         const publicKey = ec.keyFromPublic(this.fromAddress, 'hex');
         return publicKey.verify(this.calculateHash(), this.signature);
     }
-
-
 }
 
 
@@ -96,7 +94,6 @@ class Blockchain {
             }
         }
         return true;
-
     }
 
 }
